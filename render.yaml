@@ -1,0 +1,29 @@
+services:
+  # Static Site Deployment on Render (Recommended & 100% Free)
+  - type: web
+    name: nttf-m3b-students-birthday
+    env: static
+    buildCommand: node scripts/build-dist.cjs
+    staticPublishPath: ./dist
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  # Optional Node.js Web Service
+  - type: web
+    name: nttf-m3b-birthday-server
+    env: node
+    plan: free
+    buildCommand: node scripts/build-dist.cjs
+    startCommand: node scripts/serve.cjs
+    envVars:
+      - key: PORT
+        value: 10000

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NTTF M3B STUDENTS BIRTHDAY</title>
+  <meta name="description" content="NTTF M3B Students smart birthday celebration system, age calculation engine, and personalized milestone portal." />
+  
+  <!-- Favicon & PWA Icons -->
+  <link rel="icon" type="image/jpeg" href="./assets/logo.jpg" />
+  <link rel="apple-touch-icon" href="./assets/logo.jpg" />
+  <link rel="manifest" href="./manifest.json" />
+
+  <!-- Google Fonts: Orbitron, Inter, Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN for instant styling without build delay -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            cyber: {
+              bg: '#050813',
+              cyan: '#00F0FF',
+              blue: '#38BDF8',
+              purple: '#A855F7',
+              violet: '#8B5CF6',
+              pink: '#F43F5E'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Orbitron', 'sans-serif'],
+            mono: ['Space Grotesk', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Futuristic Sci-Fi Design System -->
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body class="bg-[#050813] text-slate-100 antialiased min-h-screen">
+
+  <!-- App Launch Splash Screen (Features provided splash screen) -->
+  <div id="app-splash-screen" class="fixed inset-0 z-[9999] bg-[#050813] flex flex-col items-center justify-center transition-opacity duration-700">
+    <div class="relative w-full h-full max-w-sm sm:max-w-md mx-auto flex flex-col items-center justify-center p-4">
+      <img src="./assets/splash.jpg" alt="Splash Screen" class="max-h-[80vh] w-auto object-contain rounded-2xl shadow-[0_0_50px_rgba(0,240,255,0.3)] animate-pulse" />
+      <div class="w-64 max-w-xs flex flex-col items-center mt-4">
+        <div class="w-full bg-slate-800/80 rounded-full h-2 overflow-hidden border border-cyan-500/40 shadow-[0_0_15px_rgba(0,240,255,0.4)]">
+          <div class="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 h-full w-full animate-shimmer" style="background-size: 200% 100%;"></div>
+        </div>
+        <span class="text-[11px] font-mono tracking-widest text-cyan-300 mt-2 uppercase">Loading Celebration Matrix...</span>
+      </div>
+      <button onclick="document.getElementById('app-splash-screen').style.opacity='0';setTimeout(()=>document.getElementById('app-splash-screen').style.display='none',700)" class="mt-3 text-xs text-slate-400 hover:text-cyan-400 transition-colors font-mono">
+        Skip &rarr;
+      </button>
+    </div>
+  </div>
+
+  <!-- Background Animated Cyber Grid -->
+  <div class="cyber-grid-overlay"></div>
+
+  <!-- Ambient Particle Canvas -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Main App Shell -->
+  <div class="app-container">
+    
+    <!-- Top Navigation Header -->
+    <header class="main-header">
+      <div class="nav-container">
+        
+        <!-- Brand / Logo -->
+        <div class="brand-wrapper" data-view-target="home">
+          <div class="brand-logo-glow">
+            <div class="brand-logo-inner overflow-hidden">
+              <img src="./assets/logo.jpg" alt="Logo" class="w-full h-full object-cover" />
+            </div>
+          </div>
+          <div>
+            <div class="brand-title">NTTF M3B</div>
+            <div class="brand-subtitle">Students Birthday System</div>
+          </div>
+        </div>
+
+        <!-- Desktop Navigation Items -->
+        <nav>
+          <ul class="nav-links">
+            <li>
+              <button class="nav-item-btn active" data-view-target="home">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                Home
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view-target="today">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                Today
+                <span class="nav-badge-pill" id="today-nav-badge">0</span>
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view-target="upcoming">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Upcoming
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view-target="lookup">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Individual Lookup
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view-target="directory">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                All People
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view-target="calendar">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                Calendar
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view-target="statistics">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                Statistics
+              </button>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Header Actions: Search, Sound FX, Mobile Button -->
+        <div class="header-actions">
+          <!-- Global Search Trigger -->
+          <button class="header-search-trigger" id="global-search-trigger" title="Global Birthday Search (Ctrl+K)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span class="hidden sm:inline">Search records...</span>
+            <span class="kbd-shortcut">Ctrl K</span>
+          </button>
+
+          <!-- Audio Synthesizer Toggle -->
+          <button class="icon-btn" id="sound-toggle-btn" title="Toggle Audio Effects">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          </button>
+
+          <!-- Mobile Hamburger -->
+          <button class="icon-btn mobile-menu-btn" id="mobile-menu-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Mobile Navigation Drawer -->
+      <div id="mobile-nav-drawer" class="hidden md:hidden px-4 pb-4 border-t border-slate-800 bg-[#060B18]">
+        <div class="grid grid-cols-2 gap-2 mt-3">
+          <button class="nav-item-btn" data-view-target="home">Home</button>
+          <button class="nav-item-btn" data-view-target="today">Today's Birthdays</button>
+          <button class="nav-item-btn" data-view-target="upcoming">Upcoming</button>
+          <button class="nav-item-btn" data-view-target="lookup">Individual Lookup</button>
+          <button class="nav-item-btn" data-view-target="directory">All People</button>
+          <button class="nav-item-btn" data-view-target="calendar">Calendar</button>
+          <button class="nav-item-btn" data-view-target="statistics">Statistics</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main View Container -->
+    <main class="main-content" id="view-content-root">
+      <!-- Dynamically rendered by app.js -->
+    </main>
+
+    <!-- Global Search Modal -->
+    <div id="global-search-modal" class="modal-backdrop hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="flex items-center gap-2">
+            <svg width="20" height="20" class="text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <h3 class="font-display font-bold text-white text-base">GLOBAL BIRTHDAY SEARCH</h3>
+          </div>
+          <button class="icon-btn text-lg" id="global-search-close-btn">&times;</button>
+        </div>
+        <div class="p-4 border-b border-white/5">
+          <input 
+            type="text" 
+            id="global-search-input" 
+            class="search-input-box w-full" 
+            placeholder="Search by full name, partial name, month, day, or complete DOB..."
+            autocomplete="off"
+          />
+        </div>
+        <div class="modal-body max-h-96" id="global-search-results">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Read-Only Badge Footer -->
+    <footer class="mt-auto border-t border-slate-800/80 bg-[#04060E] py-6 px-4 pb-20 md:pb-6">
+      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <div>
+          <span class="font-display font-bold text-slate-300">NTTF M3B STUDENTS BIRTHDAY</span> &bull; Official Class Birthday Celebration System
+        </div>
+        <div>
+          <span class="text-slate-500 font-mono">Display-Only Directory</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Mobile Bottom Navigation Bar (Ultra-responsive on smartphones) -->
+    <nav class="mobile-bottom-bar md:hidden" id="mobile-bottom-bar">
+      <button class="mobile-bottom-nav-item active" data-view-target="home">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>Home</span>
+      </button>
+      <button class="mobile-bottom-nav-item" data-view-target="today">
+        <div class="relative inline-block">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          <span class="mobile-bday-dot" id="mobile-today-dot"></span>
+        </div>
+        <span>Today</span>
+      </button>
+      <button class="mobile-bottom-nav-item" data-view-target="upcoming">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span>Upcoming</span>
+      </button>
+      <button class="mobile-bottom-nav-item" data-view-target="lookup">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <span>Lookup</span>
+      </button>
+      <button class="mobile-bottom-nav-item" data-view-target="directory">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+        <span>Directory</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- Application Scripts -->
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

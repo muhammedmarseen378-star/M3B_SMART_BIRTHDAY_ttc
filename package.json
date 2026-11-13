@@ -1,0 +1,17 @@
+{
+  "name": "smart-birthday-celebration-system",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/serve.cjs",
+    "serve": "node scripts/serve.cjs",
+    "dev": "node scripts/serve.cjs",
+    "build": "node scripts/import-excel.cjs && node scripts/build-dist.cjs",
+    "preview": "node scripts/serve.cjs",
+    "import-excel": "node scripts/import-excel.cjs && node scripts/build-dist.cjs"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}
